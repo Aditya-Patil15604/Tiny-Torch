@@ -192,3 +192,76 @@ class Tensor:
         result = np.max(self.data, axis= axis, keepdims = keepdims)
         return Tensor(result)
 
+"""Testing from here onwards"""
+
+def test_unit_tensor_creation():
+
+    #scalar creation
+    scalar = Tensor(5.0)
+    assert scalar.data == 5.0
+    assert scalar.shape == ()
+    assert scalar.size == 1
+    assert scalar.dtype == np.float32
+
+    #vector creation
+    vector = Tensor([1, 2, 3])
+    assert np.array_equal(vector.data, np.array([1,2,3], dtype= np.float32))
+    assert vector.shape == (3,)
+    assert vector.size == 3
+
+    #matrix creation
+    matrix = Tensor([[1,2], [3,4]])
+    assert np.array_equal(matrix.data, np.array([[1,2], [3,4]], dtype = np.float32))
+    assert matrix.shape == (2,2)
+    assert matrix.size == 4
+
+    #3D tensor creation
+    tensor_3d = Tensor([[[1,2], [3,4]], [[5, 6], [7, 8]]])
+    assert tensor_3d.shape == (2, 2, 2)
+    assert tensor_3d.size == 8
+
+    print("Tensor creation works correctly")
+
+if __name__ == "__main__":
+    test_unit_tensor_creation()
+
+def test_unit_arithmetic_operations():
+
+    #test tensor + tensor
+    a = Tensor([1, 2, 3])
+    b = Tensor([4, 5, 6])
+    result = a + b
+    assert np.array_equal(result.data, np.array([5, 7, 9], dtype= np.float32 ))
+    
+    #test tensor + scalar
+    result = a + 10
+    assert np.array_equal(result.data, np.array([11, 12, 13], dtype= np.float32))
+
+    #test broadcasting with different shapes(matrix + vector)
+    matrix = Tensor([[1, 2], [3, 4]])
+    vector = Tensor([10, 20])
+    result = matrix + vector
+    expected = np.array([[11, 22], [13, 24]], dtype= np.float32)
+    assert np.array_equal(result.data, expected)
+
+    #test subtraction
+    result = b - a
+    assert np.array_equal(result.data, np.array([3, 3, 3], dtype= np.float32))
+
+    #test multiplication (scaling)
+    result = a * 2
+    assert np.array_equal(result.data, np.array([2, 4, 6], dtype= np.float32))
+
+    #test division (normalization)
+    result = b / 2
+    assert np.array_equal(result.data, np.array([2.0, 2.5, 3.0], np.float32))
+
+    #test chaining operations
+    normalized = (a - 2) / 2
+    expected = np.array([-0.5, 0.0, 0.5], dtype= np.float32)
+    assert np.allclose(normalized.data, expected.data)
+
+    print("Arithmetic operations work correctly")
+
+if __name__ == "__main__":
+    test_unit_arithmetic_operations()
