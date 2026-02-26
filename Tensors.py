@@ -265,3 +265,42 @@ def test_unit_arithmetic_operations():
 
 if __name__ == "__main__":
     test_unit_arithmetic_operations()
+
+def test_unit_validate_matmul_shape():
+    print("Unit test: Validate Matmul shapes")
+
+    a = Tensor([[1, 2], [3, 4]])
+    b = Tensor([[5, 6], [7, 8]])
+    a._validate_matmul_shapes(b)
+
+    c = Tensor([1, 2, 3])
+    d = Tensor([[1], [2], [3]])
+    c._validate_matmul_shapes(d)
+
+    try:
+        a._validate_matmul_shapes([[1, 2], [3, 4]])
+        assert False, "Should have raised ValueError for Non-Tensor"
+    except TypeError as e:
+        assert "requires Tensor" in str(e)
+        assert "list" in str(e)
+
+    try:
+        scalar = Tensor(5.0)
+        scalar._validate_matmul_shapes(a)
+        assert False, "Should have raised ValueError for 0D Tensor"
+    except ValueError as e:
+        assert "1D" in str(e)
+
+    try:
+        incompatible_a = Tensor([1, 2])
+        incompatible_b = Tensor([[1], [2], [3]])
+        incompatible_a._validate_matmul_shapes(incompatible_b)
+        assert True, "Should have raised ValueError for shape mismatch"
+    except ValueError as e:
+        assert "Inner dimensions don't match" in str(e)
+        assert "2 vs 3" in str(e)
+
+    print("Matmul shape validation works correctly")
+
+if __name__ == "__main__":
+    test_unit_validate_matmul_shape()
