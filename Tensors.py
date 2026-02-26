@@ -304,3 +304,32 @@ def test_unit_validate_matmul_shape():
 
 if __name__ == "__main__":
     test_unit_validate_matmul_shape()
+
+def test_unit_matrix_multiplication():
+    print("Unit Test: matrix multiplcation")
+
+    a = Tensor([[1, 2], [3, 4]])
+    b = Tensor([[5, 6], [7, 8]])
+    result = a.matmul(b)
+    expected = np.array([[19, 22], [43, 50]], dtype= np.float32)
+    assert np.array_equal(result.data, expected)
+
+    c = Tensor([[1,2, 3], [4, 5, 6]])
+    d = Tensor([[7, 8], [9, 10], [11, 12]])
+    result = c.matmul(d)
+    expected = np.array([[58, 64], [139, 154]], dtype= np.float32)
+    assert np.array_equal(result.data, expected)
+
+    matrix = Tensor([[1, 2, 3], [4, 5, 6]])
+    vector = Tensor([1, 2, 3])
+    result = matrix.matmul(vector)
+    expected = np.array([14, 32], dtype= np.float32)
+    assert np.array_equal(result.data, expected)
+
+    result_at = a @ b
+    assert np.array_equal(result_at.data, np.array([[19, 22], [43, 50]], dtype= np.float32))
+
+    print("Matrix Multiplcation works correctly")
+
+if __name__ == "__main__":
+    test_unit_matrix_multiplication()
